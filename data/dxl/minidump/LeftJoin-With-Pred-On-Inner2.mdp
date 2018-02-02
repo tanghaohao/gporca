@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+create table r(a int, b int) distributed by (a);
+create table s(c int, d int) distributed by (c);
+
+insert into r select i + 1, i%3  generate_series(1,20) I; 
+insert into s select i%7,i%2  generate_series(1,30) i;
+-->
 <dxl:DXLMessage xmlns:dxl="http://greenplum.com/dxl/2010/12/">
   <dxl:Thread Id="0">
     <dxl:OptimizerConfig>
