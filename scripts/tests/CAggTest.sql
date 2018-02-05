@@ -1,21 +1,136 @@
 -- DQA-KeepOuterReference.mdp 
+CREATE TABLE tint (c int);
+select (select distinct tint.c from tint as tt)  x from tint;
+drop table tint;
+
 -- ScalarSubqueryCountStarInJoin.mdp 
+CREATE TABLE foo(a,b) AS VALUES (1,1);
+CREATE TABLE bar(c int, d int);
+CREATE TABLE jazz(e int, f int);
+
+SELECT (SELECT jazz.count FROM (SELECT count(*) FROM bar GROUP BY c LIMIT 1) AS bar, (SELECT count(*) FROM jazz WHERE e = a) AS jazz) FROM foo;
+
+drop table foo;
+drop table bar;
+drop table jazz;
 -- ScalarCorrelatedSubqueryCountStar.mdp 
+
+CREATE TABLE foo(a, b) AS VALUES (1, 1);
+CREATE TABLE bar(c int, d int);
+EXPLAIN SELECT (SELECT count(*) FROM bar where c = a) FROM foo;
+
+drop table foo;
+drop table bar;
 -- ScalarSubqueryCountStar.mdp 
+
+CREATE TABLE foo (a, b) AS SELECT i,i FROM generate_series(1,1) AS t(i) DISTRIBUTED BY(a);
+CREATE TEMP TABLE bar (c int, d int);
+EXPLAIN SELECT (SELECT COUNT(*) FROM bar GROUP BY c LIMIT 1) FROM foo;
+
+drop table foo;
+drop table bar;
 -- DQA-SplitScalarWithAggAndGuc.mdp 
--- DQA-SplitScalarWithGuc.mdp 
+create table foo (a int, b int) distributed by (a);
+insert into foo select i, i%2 from generate_series(1, 100000) i;
+set optimizer_force_three_stage_scalar_dqa = on;
+
+explain select count(distinct b ), sum(b) from foo;
+drop table if exists foo;
+
+-- DQA-SplitScalarWithGuc.mdp
+create table foo (a int, b int) distributed by (a);
+insert into foo select i, i%2 from generate_series(1, 100000) i;
+
+set optimizer=on;
+set optimizer_prefer_scalar_dqa_multistage_agg=on;
+explain select count(distinct b ) from foo;
 -- DQA-SplitScalar.mdp 
--- Agg-NonSplittable.mdp 
--- SortOverStreamAgg.mdp 
+drop table if exists foo;
+create table foo (a int, b int) distributed by (a);
+
+insert into foo select i, i%2 from generate_series(1, 100000) i;
+
+set optimizer=on;
+set optimizer_segments=128;
+
+explain select count(distinct b ) from foo;
+
+drop table if exists foo;
+-- Agg-NonSplittable.mdp (TODO --- too complex)
+-- SortOverStreamAgg.mdp (TODO)
 -- NoHashAggWithoutPrelimFunc.mdp 
--- AggWithSubqArgs.mdp 
+
+CREATE TABLE attribute_table (product_id integer, attribute_id integer,attribute text, attribute2 text,attribute_ref_lists text,short_name text,attribute6 text,attribute5 text,measure double precision,unit character varying(60)) DISTRIBUTED BY (product_id ,attribute_id);
+CREATE OR REPLACE FUNCTION do_concat(text,text) 
+RETURNS text 
+AS 'SELECT CASE WHEN $1 IS NULL THEN $2
+WHEN $2 IS NULL THEN $1
+ELSE $1 || $2 END;'
+     LANGUAGE SQL 
+     IMMUTABLE 
+     RETURNS NULL ON NULL INPUT; 
+
+CREATE AGGREGATE concat(text) ( 
+    SFUNC = do_concat, 
+    STYPE = text,
+    INITCOND = '' 
+);
+
+select product_id,concat('#attribute_'||attribute_id::varchar||':'||attribute) as attr FROM attribute_table GROUP BY product_id;
+
+-- AggWithSubqArgs.mdp (TODO)
+create table a (a1 int, a2 int) distributed by (a1);
+create table b (b1 int, b2 int) distributed by (b1);
+
+-- explain select sum(select a1 from a where a2 = b2) from b;
+
+drop table a;
+drop table b;
 -- Agg-Limit.mdp 
+create table x (i int, j int) distributed by (i);
+insert into foo select i, i%2 from generate_series(1,10) i;
+explain select sum(i) from (select * from x limit 10) x(i,j);
+
+drop table x;
 -- GroupByEmptySetNoAgg.mdp 
+create table gpd (a int, b int) distributed by (a);
+insert into gpd select i, i%10 from generate_series(1,2) i;
+explain select 1 from gpd;
+
+drop table gpd;
 -- CollapseGb-With-Agg-Funcs.mdp 
+create table x (i int, j int) distributed by (i);
+
+explain select i from (select i, j, sum(i) as s from x group by i,j) x(i, j, s) group by i, s order by i, s;
+
+drop table x;
 -- CollapseGb-Without-Agg-Funcs.mdp 
+create table x (i int, j int) distributed by (i);
+
+explain select i from (select i,j from x group by i,j) f(i) group by i order by i;
+
+drop table x;
 -- CollapseGb-SingleColumn.mdp 
+create table foo (i int, j int) distributed by (i);
+
+insert into foo select i, i%10 from generate_series(1,10000) i;
+explain select i from (select i from foo group by i) x(i) group by i,j order by i;
+
+drop table foo;
 -- CollapseGb-MultipleColumn.mdp 
+create table foo (i int, j int) distributed by (i);
+
+insert into foo select i, i%10 from generate_series(1,10000) i;
+explain select i,j from (select i,j from foo group by i,j order by i,j) x(i,j) group by i,j order by i,j;
+
+drop table foo;
 -- CollapseGb-Nested.mdp 
+create table foo (i int, j int) distributed by (i);
+
+insert into foo select i, i%10 from generate_series(1,10000) i;
+explain select i from (select i from foo group by i order by 1) x(i) group by i order by i;
+
+drop table foo;
 -- ThreeStageAgg.mdp 
 
 create table r (a int, b int, c int) distributed by (a);
@@ -153,9 +268,9 @@ string4 text);
 -- NEEDS MORE THOUGHT, SINCE THE AVERAGE IS A USER DEFINED NON SPITTABLE AGG.
 drop table onek;
 
--- RollupNoAgg.mdp 
--- Rollup.mdp 
--- GroupingSets.mdp 
+-- RollupNoAgg.mdp (TODO)
+-- Rollup.mdp  (TODO)
+-- GroupingSets.mdp  (TODO)
 -- CapGbCardToSelectCard.mdp 
 
 -- TPCDS SQL:
@@ -256,4 +371,15 @@ explain select 1 + (select count(*) from x) from y;
 
 drop table x;
 drop table y;
--- NestedProjectCountStarWithOuterRefs.mdp 
+-- NestedProjectCountStarWithOuterRefs.mdp
+
+create table x (i int, j int) distributed by (i);
+create table y (i int, j int) distributed by (i);
+
+insert into x select i, i from generate_series(1,10000) i;
+insert into y select i, i%2 from generate_series(1,10) i;
+
+explain select (select c+1 from (select count(*) +1 from x where x.j = y.j) z(c)) from y;
+
+drop table x;
+drop table y;
