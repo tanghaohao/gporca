@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 create table x (i int, j int) distributed by(i);
-explain select * (select 1 as ) left join x on(false);
+explain select * from (select 1) y left join x on(false);
 -->
 <dxl:DXLMessage xmlns:dxl="http://greenplum.com/dxl/2010/12/">
   <dxl:Thread Id="0">

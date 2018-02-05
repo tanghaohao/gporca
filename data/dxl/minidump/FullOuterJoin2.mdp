@@ -2,7 +2,7 @@
 <!--
 create table s(s1 int, s2 int, s3) distributed by (s1);
 
-explain select * from s full outer join s on (a);
+explain select * from s a full join s b on (a.s1 = b.s1);
 -->
 <dxl:DXLMessage xmlns:dxl="http://greenplum.com/dxl/2010/12/">
   <dxl:Thread Id="0">
