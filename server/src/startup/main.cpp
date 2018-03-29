@@ -119,6 +119,7 @@
 #include "unittest/gpopt/xforms/CXformFactoryTest.h"
 
 #include "unittest/dxl/statistics/CStatisticsTest.h"
+#include "unittest/dxl/statistics/CFilterCardinalityTest.h"
 #include "unittest/dxl/statistics/CPointTest.h"
 #include "unittest/dxl/statistics/CBucketTest.h"
 #include "unittest/dxl/statistics/CHistogramTest.h"
@@ -169,6 +170,7 @@ static gpos::CUnittest rgut[] =
 	GPOS_UNITTEST_STD(CParseHandlerTest),
 	GPOS_UNITTEST_STD(CParseHandlerOptimizerConfigSerializeTest),
 	GPOS_UNITTEST_STD(CStatisticsTest),
+	GPOS_UNITTEST_STD(CFilterCardinalityTest),
 	GPOS_UNITTEST_STD(CPointTest),
 	GPOS_UNITTEST_STD(CBucketTest),
 	GPOS_UNITTEST_STD(CHistogramTest),
