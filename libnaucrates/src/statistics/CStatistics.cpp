@@ -12,8 +12,6 @@
 #include "naucrates/dxl/CDXLUtils.h"
 #include "naucrates/statistics/CStatistics.h"
 #include "naucrates/statistics/CStatisticsUtils.h"
-#include "naucrates/statistics/CHistogramUtils.h"
-
 #include "naucrates/statistics/CScaleFactorUtils.h"
 
 #include "naucrates/statistics/CJoinStatsProcessor.h"
@@ -279,7 +277,7 @@ CStatistics::PstatsDummy
 	CColumnFactory *pcf = COptCtxt::PoctxtFromTLS()->Pcf();
 
 	BOOL fEmpty = (CStatistics::DEpsilon >= dRows);
-	CHistogramUtils::AddDummyHistogramAndWidthInfo(pmp, pcf, phmulhist, phmuldoubleWidth, pdrgpulColIds, fEmpty);
+	CHistogram::AddDummyHistogramAndWidthInfo(pmp, pcf, phmulhist, phmuldoubleWidth, pdrgpulColIds, fEmpty);
 
 	CStatistics *pstats = GPOS_NEW(pmp) CStatistics(pmp, phmulhist, phmuldoubleWidth, dRows, fEmpty);
 	CreateAndInsertUpperBoundNDVs(pmp, pstats, pdrgpulColIds, dRows);
@@ -580,7 +578,7 @@ CStatistics::AppendStats
 {
 	CStatistics *pstats = CStatistics::PstatsConvert(pstatsInput);
 
-	CHistogramUtils::AddHistograms(pmp, pstats->m_phmulhist, m_phmulhist);
+	CHistogram::AddHistograms(pmp, pstats->m_phmulhist, m_phmulhist);
 	GPOS_CHECK_ABORT;
 
 	CStatisticsUtils::AddWidthInfo(pmp, pstats->m_phmuldoubleWidth, m_phmuldoubleWidth);
@@ -610,7 +608,7 @@ CStatistics::PstatsScale
 	HMUlHist *phmulhistNew = GPOS_NEW(pmp) HMUlHist(pmp);
 	HMUlDouble *phmuldoubleNew = GPOS_NEW(pmp) HMUlDouble(pmp);
 
-	CHistogramUtils::AddHistograms(pmp, m_phmulhist, phmulhistNew);
+	CHistogram::AddHistograms(pmp, m_phmulhist, phmulhistNew);
 	GPOS_CHECK_ABORT;
 
 	CStatisticsUtils::AddWidthInfo(pmp, m_phmuldoubleWidth, phmuldoubleNew);

@@ -14,7 +14,6 @@
 
 #include "naucrates/statistics/CStatistics.h"
 #include "naucrates/statistics/CGroupByStatsProcessor.h"
-#include "naucrates/statistics/CHistogramUtils.h"
 #include "naucrates/statistics/CStatisticsUtils.h"
 
 using namespace gpopt;
@@ -43,15 +42,15 @@ CGroupByStatsProcessor::PstatsGroupBy
 	if (pstatsInput->FEmpty())
 	{
 		// add dummy histograms for the aggregates and grouping columns
-		CHistogramUtils::AddDummyHistogramAndWidthInfo(pmp, pcf, phmulhist, phmuldoubleWidth, pdrgpulAgg, true /* fEmpty */);
-		CHistogramUtils::AddDummyHistogramAndWidthInfo(pmp, pcf, phmulhist, phmuldoubleWidth, pdrgpulGC, true /* fEmpty */);
+		CHistogram::AddDummyHistogramAndWidthInfo(pmp, pcf, phmulhist, phmuldoubleWidth, pdrgpulAgg, true /* fEmpty */);
+		CHistogram::AddDummyHistogramAndWidthInfo(pmp, pcf, phmulhist, phmuldoubleWidth, pdrgpulGC, true /* fEmpty */);
 
 		pstatsAgg = GPOS_NEW(pmp) CStatistics(pmp, phmulhist, phmuldoubleWidth, dRowsAgg, true /* fEmpty */);
 	}
 	else
 	{
 		// for computed aggregates, we're not going to be very smart right now
-		CHistogramUtils::AddDummyHistogramAndWidthInfo(pmp, pcf, phmulhist, phmuldoubleWidth, pdrgpulAgg, false /* fEmpty */);
+		CHistogram::AddDummyHistogramAndWidthInfo(pmp, pcf, phmulhist, phmuldoubleWidth, pdrgpulAgg, false /* fEmpty */);
 
 		CColRefSet *pcrsGrpColComputed = GPOS_NEW(pmp) CColRefSet(pmp);
 		CColRefSet *pcrsGrpColsForStats = CStatisticsUtils::PcrsGrpColsForStats(pmp, pdrgpulGC, pcrsGrpColComputed);

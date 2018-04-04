@@ -14,7 +14,6 @@
 
 #include "naucrates/statistics/CStatistics.h"
 #include "naucrates/statistics/CUnionAllStatsProcessor.h"
-#include "naucrates/statistics/CHistogramUtils.h"
 #include "naucrates/statistics/CStatisticsUtils.h"
 
 using namespace gpopt;
@@ -49,7 +48,7 @@ CUnionAllStatsProcessor::PstatsUnionAll
 	CDouble dRowsUnionAll = CStatistics::DMinRows;
 	if (fEmptyUnionAll)
 	{
-		CHistogramUtils::AddDummyHistogramAndWidthInfo(pmp, pcf, phmulhistNew, phmuldoubleWidth, pdrgpulOutput, true /*fEmpty*/);
+		CHistogram::AddDummyHistogramAndWidthInfo(pmp, pcf, phmulhistNew, phmuldoubleWidth, pdrgpulOutput, true /*fEmpty*/);
 	}
 	else
 	{

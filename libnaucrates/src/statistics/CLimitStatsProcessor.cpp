@@ -14,7 +14,6 @@
 
 #include "naucrates/statistics/CStatisticsUtils.h"
 #include "naucrates/statistics/CLimitStatsProcessor.h"
-#include "naucrates/statistics/CHistogramUtils.h"
 
 using namespace gpopt;
 

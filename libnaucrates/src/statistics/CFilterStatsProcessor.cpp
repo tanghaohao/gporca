@@ -15,7 +15,6 @@
 #include "naucrates/statistics/CStatistics.h"
 #include "naucrates/statistics/CFilterStatsProcessor.h"
 #include "naucrates/statistics/CJoinStatsProcessor.h"
-#include "naucrates/statistics/CHistogramUtils.h"
 #include "naucrates/statistics/CStatisticsUtils.h"
 #include "naucrates/statistics/CScaleFactorUtils.h"
 
@@ -94,7 +93,7 @@ CFilterStatsProcessor::PstatsFilter
 	if (pstatsInput->FEmpty())
 	{
 		phmulhistNew = GPOS_NEW(pmp) HMUlHist(pmp);
-		CHistogramUtils::AddEmptyHistogram(pmp, phmulhistNew, phmulhistCopy);
+		CHistogram::AddEmptyHistogram(pmp, phmulhistNew, phmulhistCopy);
 	}
 	else
 	{
@@ -536,7 +535,7 @@ CFilterStatsProcessor::PhmulhistApplyDisjFilter
 
 	*pdScaleFactor = CScaleFactorUtils::DScaleFactorCumulativeDisj(pstatsconf, pdrgpdScaleFactor, dRowsInput);
 
-	CHistogramUtils::AddHistograms(pmp, phmulhistInput, phmulhistResultDisj);
+	CHistogram::AddHistograms(pmp, phmulhistInput, phmulhistResultDisj);
 
 	pbsStatsNonUpdateableCols->Release();
 
