@@ -6,7 +6,7 @@
 //		CGroupByStatsProcessor.cpp
 //
 //	@doc:
-//		Statistics helper routines for processing limit operations
+//		Statistics helper routines for processing group by operations
 //---------------------------------------------------------------------------
 
 #include "gpopt/operators/ops.h"

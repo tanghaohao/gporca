@@ -6,7 +6,7 @@
 //		CUnionAllStatsProcessor.cpp
 //
 //	@doc:
-//		Statistics helper routines for processing project operations
+//		Statistics helper routines for processing union all operations
 //---------------------------------------------------------------------------
 
 #include "gpopt/operators/ops.h"

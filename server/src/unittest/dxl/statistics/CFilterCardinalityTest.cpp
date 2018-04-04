@@ -1,12 +1,12 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2017 Pivotal, Inc.
+//	Copyright (C) 2018 Pivotal, Inc.
 //
 //	@filename:
 //		CFilterCardinalityTest.cpp
 //
 //	@doc:
-//		Test for join cardinality estimation
+//		Test for filter cardinality estimation
 //---------------------------------------------------------------------------
 
 #ifndef __STDC_CONSTANT_MACROS
@@ -89,9 +89,9 @@ CFilterCardinalityTest::EresUnittest()
 	return CUnittest::EresExecute(rgutSharedOptCtxt, GPOS_ARRAY_SIZE(rgutSharedOptCtxt));
 }
 
-//		Reads a DXL document, generates the statistics object, performs a
-//		filter operation on it, serializes it into a DXL document and
-//		compares the generated DXL document with the expected DXL document.
+// reads a DXL document, generates the statistics object, performs a
+// filter operation on it, serializes it into a DXL document and
+// compares the generated DXL document with the expected DXL document.
 GPOS_RESULT
 CFilterCardinalityTest::EresUnittest_CStatistics
 	(
@@ -237,7 +237,6 @@ CFilterCardinalityTest::EresUnittest_CStatisticsFilterDisj()
 
 	return EresUnittest_CStatistics(rgstatsdisjtc, ulTestCases);
 }
-
 
 // create an or filter (no duplicate)
 CStatsPred *
@@ -448,9 +447,9 @@ CFilterCardinalityTest::PstatspredNestedPredDiffCol1
 	return GPOS_NEW(pmp) CStatsPredConj(pdrgpstatspredConj);
 }
 
-//		Create nested AND and OR predicates where the AND and OR predicates
-//		are on different columns. note: the order of the predicates in
-//		reversed as in PstatspredNestedPredDiffCol1
+// create nested AND and OR predicates where the AND and OR predicates
+// are on different columns. note: the order of the predicates in
+// reversed as in PstatspredNestedPredDiffCol1
 CStatsPred *
 CFilterCardinalityTest::PstatspredNestedPredDiffCol2
 	(
@@ -473,8 +472,8 @@ CFilterCardinalityTest::PstatspredNestedPredDiffCol2
 	return GPOS_NEW(pmp) CStatsPredConj(pdrgpstatspredConj);
 }
 
-//		Create nested AND and OR predicates where the AND and OR predicates
-//		are on the same columns
+// create nested AND and OR predicates where the AND and OR predicates
+// are on the same columns
 CStatsPred *
 CFilterCardinalityTest::PstatspredNestedPredCommonCol1
 	(
@@ -498,8 +497,8 @@ CFilterCardinalityTest::PstatspredNestedPredCommonCol1
 	return GPOS_NEW(pmp) CStatsPredConj(pdrgpstatspredConj);
 }
 
-//		Create nested AND and OR predicates where the AND and OR predicates
-//		are on the same columns
+// create nested AND and OR predicates where the AND and OR predicates
+// are on the same columns
 CStatsPred *
 CFilterCardinalityTest::PstatspredNestedPredCommonCol2
 	(
@@ -523,8 +522,8 @@ CFilterCardinalityTest::PstatspredNestedPredCommonCol2
 	return GPOS_NEW(pmp) CStatsPredConj(pdrgpstatspredConj);
 }
 
-//		Create nested AND and OR predicates where the AND and OR predicates
-//		share common columns
+// create nested AND and OR predicates where the AND and OR predicates
+// share common columns
 CStatsPred *
 CFilterCardinalityTest::PstatspredNestedSharedCol
 	(

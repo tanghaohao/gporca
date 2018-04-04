@@ -1,12 +1,12 @@
 //---------------------------------------------------------------------------
 //	Greenplum Database
-//	Copyright (C) 2017 Pivotal, Inc.
+//	Copyright (C) 2018 Pivotal, Inc.
 //
 //	@filename:
 //		CFilterCardinalityTest.h
 //
 //	@doc:
-//		Test for join cardinality estimation
+//		Test for filter cardinality estimation
 //---------------------------------------------------------------------------
 #ifndef GPNAUCRATES_CFilterCardinalityTest_H
 #define GPNAUCRATES_CFilterCardinalityTest_H
